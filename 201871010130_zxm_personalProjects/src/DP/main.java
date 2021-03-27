@@ -21,6 +21,8 @@ public class main  extends JPanel{
 	static int ans_weight[],ans_value[],ans_num;
 	static int time_run;
 	static int back_weight,back_value;
+	static double run_time;
+	static long back_count;
 	
 	public static void read_file_data(String file_name) {
 		try {
@@ -286,6 +288,10 @@ public class main  extends JPanel{
     }
      
     public static void dfs(int x){
+    	back_count++;
+    	if(back_count>1000000000) {
+    		return;
+    	}
     	if(x+1>=row) {
     		return ;
     	}	
@@ -335,20 +341,41 @@ public class main  extends JPanel{
     		solve();
     	}
     	if(t==1) {
+    		long  startTime = System.currentTimeMillis(); 
     		DP();
+    		long endTime = System.currentTimeMillis();
+    		run_time=(endTime - startTime)/1000;
+    		System.out.println(run_time+"s");
     	}
     	else if(t==2) {
     		back_weight=Weight;
     		back_value=0;
+    		long  startTime = System.currentTimeMillis(); 
     		dfs(0);
+    		if(back_count>1000000000) {
+    			System.out.println("数据过大,回溯法无法在短时间内得到结果");
+    			return;
+    		}
+    		long endTime = System.currentTimeMillis();
+    		run_time=(endTime - startTime)/1000;
     		System.out.println(res);
+    		System.out.println(run_time+"s");
     	}
     }
     
-	public static void main(String[] args) {
+    static void write_to_txt() throws FileNotFoundException {
+    	PrintStream ps = new PrintStream("res.txt");
+    	ps.println("最优解:"+res);
+    	ps.println("运行时间:"+run_time+"s");
+    	ps.close();
+    }
+    
+	public static void main(String[] args) throws FileNotFoundException {
 		read_file();			//读取文本有效数据
 		draw_scatterplot();		//绘制散点图
 		data_sort();			//数据排序
 		solve();				//选择动态规划或者回溯法求解
+		write_to_txt();
+		System.out.println("程序运行结束！！！");
 	}
 }
