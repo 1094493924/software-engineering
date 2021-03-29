@@ -8,22 +8,28 @@ import java.util.Scanner;
 import javax.swing.*;
 import sun.tools.jar.Main;
 import java.lang.reflect.Field;
+
+/**
+ * 
+ * @author 201871010130_周学铭
+ * 折扣背包其本质就是特殊的分组背包，所有下标都从1开始。
+ * 
+ */
+
 public class main  extends JPanel{
-	
-	static int Num = 0,Weight=0;
+	static int Num = 0,Weight=0;				//Num:背包组数，Weight:总重量
 	static Scanner input=new Scanner(System.in);
-	static int weight[][];
-	static int value[][];
-	static int row=1,col=1;
-	static int dp[];
-	static int goods[][];
-	static int res;
-	static int ans_weight[],ans_value[],ans_num;
-	static int time_run;
-	static int back_weight,back_value;
-	static double run_time;
-	static long back_count;
+	static int weight[][];						//数据集中读入的重量，第一维表示第几组，第二维表示该组的第一个元素
+	static int value[][];						//数据集中读入的价格
+	static int row=1,col=1;						//数据集分组背包个数，及每个背包的物品个数
+	static int dp[];							//dp求解
+	static int goods[][];						//回溯法求解
+	static int res;								//最优解
+	static int back_weight,back_value;			//回溯法记录部分最优解的临时变量
+	static double run_time;						//程序运行时间
+	static long back_count;						//回溯法执行次数，用来判断回溯法能否在有效时间内运行结束
 	
+	//读取数据集有效数据
 	public static void read_file_data(String file_name) {
 		try {
 			int t;
@@ -155,6 +161,8 @@ public class main  extends JPanel{
         }
 	}
 	
+	
+	//选取数据集
 	public static void read_file() {
 		int _;
 		System.out.println("请选择读取一个测试数据集:");
@@ -178,6 +186,8 @@ public class main  extends JPanel{
 		}
 	}
 	
+	
+	//绘制散点图
 	static int data[][];
 	final int PAD =20;
 	
@@ -238,6 +248,7 @@ public class main  extends JPanel{
          f.setVisible(true);
     }
     
+    //数据排序
     public static void data_sort() {
     	for(int i=1;i<row;i++) {
     		for(int j=i+1;j<row;j++) {
@@ -267,8 +278,12 @@ public class main  extends JPanel{
     			}
     		}
     	}
-    }
+    	for(int i=1;i<row;i++) {
+    		System.out.println("第"+i+"组物品第三项的价值:重量比:"+value[i][3]/(double)weight[i][3]);
+    	}
+    }	
     
+    //动态规划法求解
     public static void DP(){
     	dp=new int[1000000];
     	for(int i=1;i<row;i++) {
@@ -284,9 +299,9 @@ public class main  extends JPanel{
     		}
     	}
     	res=dp[Weight];
-    	System.out.println(res);
     }
      
+    //回溯法求解
     public static void dfs(int x){
     	back_count++;
     	if(back_count>1000000000) {
@@ -330,6 +345,7 @@ public class main  extends JPanel{
     	}
     }
     
+    //自主选择方法求解
     public static void solve() {
     	System.out.println("请选择一种方法来求解D{0-1}问题");
     	System.out.println("1:动态规划法\t2:回溯法");
@@ -345,7 +361,8 @@ public class main  extends JPanel{
     		DP();
     		long endTime = System.currentTimeMillis();
     		run_time=(endTime - startTime)/1000;
-    		System.out.println(run_time+"s");
+    		System.out.println("最优解:"+res);
+    		System.out.println("运行时间:"+run_time+"s");
     	}
     	else if(t==2) {
     		back_weight=Weight;
@@ -358,11 +375,12 @@ public class main  extends JPanel{
     		}
     		long endTime = System.currentTimeMillis();
     		run_time=(endTime - startTime)/1000;
-    		System.out.println(res);
-    		System.out.println(run_time+"s");
+    		System.out.println("最优解:"+res);
+    		System.out.println("运行时间:"+run_time+"s");
     	}
     }
     
+    //将答案写入txt文件
     static void write_to_txt() throws FileNotFoundException {
     	PrintStream ps = new PrintStream("res.txt");
     	ps.println("最优解:"+res);
@@ -370,6 +388,7 @@ public class main  extends JPanel{
     	ps.close();
     }
     
+    //主函数
 	public static void main(String[] args) throws FileNotFoundException {
 		read_file();			//读取文本有效数据
 		draw_scatterplot();		//绘制散点图
