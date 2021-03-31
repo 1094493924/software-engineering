@@ -28,6 +28,7 @@ public class main  extends JPanel{
 	static int back_weight,back_value;			//回溯法记录部分最优解的临时变量
 	static double run_time;						//程序运行时间
 	static long back_count;						//回溯法执行次数，用来判断回溯法能否在有效时间内运行结束
+	static int ans[];
 	
 	//读取数据集有效数据
 	public static void read_file_data(String file_name) {
@@ -279,7 +280,7 @@ public class main  extends JPanel{
     		}
     	}
     	for(int i=1;i<row;i++) {
-    		System.out.println("第"+i+"组物品第三项的价值:重量比:"+value[i][3]/(double)weight[i][3]);
+    		System.out.println("第"+i+"组数据:"+"("+value[i][1]+","+weight[i][1]+")\t("+value[i][2]+","+weight[i][2]+")\t("+value[i][3]+","+weight[i][3]+")\t(性价比:"+value[i][3]/(double)weight[i][3]+")");
     	}
     }	
     
@@ -304,7 +305,7 @@ public class main  extends JPanel{
     //回溯法求解
     public static void dfs(int x){
     	back_count++;
-    	if(back_count>1000000000) {
+    	if(back_count>100000000) {
     		return;
     	}
     	if(x+1>=row) {
@@ -360,7 +361,7 @@ public class main  extends JPanel{
     		long  startTime = System.currentTimeMillis(); 
     		DP();
     		long endTime = System.currentTimeMillis();
-    		run_time=(endTime - startTime)/1000;
+    		run_time=(endTime - startTime)/1000.0;
     		System.out.println("最优解:"+res);
     		System.out.println("运行时间:"+run_time+"s");
     	}
@@ -368,13 +369,14 @@ public class main  extends JPanel{
     		back_weight=Weight;
     		back_value=0;
     		long  startTime = System.currentTimeMillis(); 
+    		ans=new int[1010];
     		dfs(0);
-    		if(back_count>1000000000) {
+    		if(back_count>100000000) {
     			System.out.println("数据过大,回溯法无法在短时间内得到结果");
     			return;
     		}
     		long endTime = System.currentTimeMillis();
-    		run_time=(endTime - startTime)/1000;
+    		run_time=(endTime - startTime)/1000.0;
     		System.out.println("最优解:"+res);
     		System.out.println("运行时间:"+run_time+"s");
     	}
@@ -394,7 +396,7 @@ public class main  extends JPanel{
 		draw_scatterplot();		//绘制散点图
 		data_sort();			//数据排序
 		solve();				//选择动态规划或者回溯法求解
-		write_to_txt();
+		write_to_txt();			//存储结果到txt
 		System.out.println("程序运行结束！！！");
 	}
 }
