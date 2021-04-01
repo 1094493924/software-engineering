@@ -29,6 +29,7 @@ public class main  extends JPanel{
 	static double run_time;						//程序运行时间
 	static long back_count;						//回溯法执行次数，用来判断回溯法能否在有效时间内运行结束
 	static int ans[];
+	static int remain_capacity;
 	
 	//读取数据集有效数据
 	public static void read_file_data(String file_name) {
@@ -299,6 +300,14 @@ public class main  extends JPanel{
     			}
     		}
     	}
+    	for(int i=Weight-1;i>=0;i--) {
+    		if(dp[i]==dp[i+1]) {
+    			remain_capacity++;
+    		}
+    		else {
+    			break;
+    		}
+    	}
     	res=dp[Weight];
     }
      
@@ -387,7 +396,12 @@ public class main  extends JPanel{
     	PrintStream ps = new PrintStream("res.txt");
     	ps.println("最优解:"+res);
     	ps.println("运行时间:"+run_time+"s");
+    	ps.println("求得最优解后背包的剩余容量:"+remain_capacity);
     	ps.close();
+    }
+    
+    static void get_remain_capacity() {
+    	System.out.println("求得最优解后背包的剩余容量:"+remain_capacity);
     }
     
     //主函数
@@ -397,6 +411,7 @@ public class main  extends JPanel{
 		data_sort();			//数据排序
 		solve();				//选择动态规划或者回溯法求解
 		write_to_txt();			//存储结果到txt
+		get_remain_capacity();	//获取得到最优解后，背包剩余的容量
 		System.out.println("程序运行结束！！！");
 	}
 }
